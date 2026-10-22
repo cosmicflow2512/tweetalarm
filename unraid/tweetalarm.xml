@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>tweetalarm</Name>
+  <Repository>ghcr.io/cosmicflow2512/tweetalarm:latest</Repository>
+  <Registry>https://github.com/cosmicflow2512/tweetalarm/pkgs/container/tweetalarm</Registry>
+  <Network>bridge</Network>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/cosmicflow2512/tweetalarm/issues</Support>
+  <Project>https://github.com/cosmicflow2512/tweetalarm</Project>
+  <Overview>Pollt X/Twitter-Accounts ueber eine selbst gehostete RSSHub-Instanz und loest bei neuen Tweets einen Pushover-Alarm aus (Emergency-Priority bis Bestaetigung oder N Einzelnachrichten).</Overview>
+  <Category>Tools: Status:Stable</Category>
+  <WebUI/>
+  <Icon>https://pushover.net/images/pushover-logo.svg</Icon>
+  <ExtraParams>--restart unless-stopped</ExtraParams>
+  <Config Name="Accounts" Target="ACCOUNTS" Default="" Mode="" Description="X-Benutzernamen ohne @, kommagetrennt" Type="Variable" Display="always" Required="true" Mask="false"></Config>
+  <Config Name="RSSHub URL" Target="RSSHUB_URL" Default="http://192.168.1.10:1200" Mode="" Description="Basis-URL der RSSHub-Instanz (Unraid-IP:1200)" Type="Variable" Display="always" Required="true" Mask="false">http://192.168.1.10:1200</Config>
+  <Config Name="RSSHub Access Key" Target="RSSHUB_ACCESS_KEY" Default="" Mode="" Description="Nur wenn ACCESS_KEY in RSSHub gesetzt ist" Type="Variable" Display="always" Required="false" Mask="true"></Config>
+  <Config Name="Pushover App Token" Target="PUSHOVER_TOKEN" Default="" Mode="" Description="API-Token der Pushover-Anwendung" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="Pushover User Key" Target="PUSHOVER_USER" Default="" Mode="" Description="User- oder Group-Key" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="Pushover Device" Target="PUSHOVER_DEVICE" Default="" Mode="" Description="Optional: nur an dieses Geraet (z. B. iphone)" Type="Variable" Display="always" Required="false" Mask="false"></Config>
+  <Config Name="Pushover Sound" Target="PUSHOVER_SOUND" Default="" Mode="" Description="Optional: z. B. persistent, siren, alien. Leer = Standardton" Type="Variable" Display="always" Required="false" Mask="false"></Config>
+  <Config Name="Modus" Target="MODE" Default="emergency|burst" Mode="" Description="emergency = Priority 2, wiederholt bis Bestaetigung; burst = BURST_COUNT Einzelnachrichten" Type="Variable" Display="always" Required="true" Mask="false">emergency</Config>
+  <Config Name="Emergency Retry (s)" Target="EMERGENCY_RETRY" Default="30" Mode="" Description="Abstand der Wiederholungen, min. 30" Type="Variable" Display="always" Required="false" Mask="false">30</Config>
+  <Config Name="Emergency Expire (s)" Target="EMERGENCY_EXPIRE" Default="3600" Mode="" Description="Wie lange wiederholt wird, max. 10800 (Pushover deckelt zusaetzlich auf 50 Wiederholungen)" Type="Variable" Display="always" Required="false" Mask="false">3600</Config>
+  <Config Name="Burst Anzahl" Target="BURST_COUNT" Default="10" Mode="" Description="Nur Modus burst" Type="Variable" Display="advanced" Required="false" Mask="false">10</Config>
+  <Config Name="Burst Abstand (s)" Target="BURST_DELAY" Default="2" Mode="" Description="Nur Modus burst" Type="Variable" Display="advanced" Required="false" Mask="false">2</Config>
+  <Config Name="Burst Priority" Target="BURST_PRIORITY" Default="1" Mode="" Description="Nur Modus burst: -2 bis 1" Type="Variable" Display="advanced" Required="false" Mask="false">1</Config>
+  <Config Name="Poll-Intervall (s)" Target="POLL_INTERVAL" Default="60" Mode="" Description="Abstand zwischen Feed-Abrufen" Type="Variable" Display="always" Required="false" Mask="false">60</Config>
+  <Config Name="Retweets alarmieren" Target="INCLUDE_RETWEETS" Default="false|true" Mode="" Description="RSSHub-Parameter includeRts" Type="Variable" Display="always" Required="false" Mask="false">false</Config>
+  <Config Name="Antworten alarmieren" Target="INCLUDE_REPLIES" Default="false|true" Mode="" Description="RSSHub-Parameter includeReplies" Type="Variable" Display="always" Required="false" Mask="false">false</Config>
+  <Config Name="Stoerungsalarm ab Fehlern" Target="FAIL_ALERT_THRESHOLD" Default="5" Mode="" Description="Nach so vielen Fehlabrufen in Folge kommt ein Pushover-Hinweis (Priority 1)" Type="Variable" Display="advanced" Required="false" Mask="false">5</Config>
+  <Config Name="Stoerungsalarm Wiederholung (min)" Target="FAIL_ALERT_REPEAT_MIN" Default="60" Mode="" Description="Abstand wiederholter Stoerungsmeldungen" Type="Variable" Display="advanced" Required="false" Mask="false">60</Config>
+  <Config Name="Testalarm beim Start" Target="TEST_ON_START" Default="false|true" Mode="" Description="Sendet beim Containerstart einen Testalarm" Type="Variable" Display="always" Required="false" Mask="false">true</Config>
+  <Config Name="Log Level" Target="LOG_LEVEL" Default="INFO|DEBUG|WARNING" Mode="" Description="" Type="Variable" Display="advanced" Required="false" Mask="false">INFO</Config>
+  <Config Name="Daten" Target="/data" Default="/mnt/user/appdata/tweetalarm" Mode="rw" Description="State (bereits gesehene Tweets)" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/tweetalarm</Config>
+</Container>

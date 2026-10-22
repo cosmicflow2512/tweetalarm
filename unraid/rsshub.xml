@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>rsshub</Name>
+  <Repository>diygod/rsshub:latest</Repository>
+  <Registry>https://hub.docker.com/r/diygod/rsshub</Registry>
+  <Network>bridge</Network>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/DIYgod/RSSHub/issues</Support>
+  <Project>https://docs.rsshub.app/</Project>
+  <Overview>RSSHub fuer tweetalarm. Twitter-Route benoetigt den auth_token-Cookie eines (Zweit-)Accounts.</Overview>
+  <Category>Tools: Network:Web</Category>
+  <WebUI>http://[IP]:[PORT:1200]/</WebUI>
+  <Icon>https://docs.rsshub.app/logo.png</Icon>
+  <ExtraParams>--restart unless-stopped</ExtraParams>
+  <Config Name="WebUI Port" Target="1200" Default="1200" Mode="tcp" Description="" Type="Port" Display="always" Required="true" Mask="false">1200</Config>
+  <Config Name="Twitter auth_token" Target="TWITTER_AUTH_TOKEN" Default="" Mode="" Description="Wert des auth_token-Cookies aus einer eingeloggten x.com-Session (Zweitaccount)" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="Cache Expire (s)" Target="CACHE_EXPIRE" Default="60" Mode="" Description="Route-Cache. Default von RSSHub sind 300 s, das verzoegert Alarme" Type="Variable" Display="always" Required="false" Mask="false">60</Config>
+  <Config Name="Access Key" Target="ACCESS_KEY" Default="" Mode="" Description="Optional, schuetzt die Instanz. Dann denselben Wert in tweetalarm eintragen" Type="Variable" Display="always" Required="false" Mask="true"></Config>
+  <Config Name="Request Timeout (ms)" Target="REQUEST_TIMEOUT" Default="15000" Mode="" Description="Default 3000" Type="Variable" Display="advanced" Required="false" Mask="false">15000</Config>
+</Container>
