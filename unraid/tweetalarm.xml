@@ -7,14 +7,16 @@
   <Privileged>false</Privileged>
   <Support>https://github.com/cosmicflow2512/tweetalarm/issues</Support>
   <Project>https://github.com/cosmicflow2512/tweetalarm</Project>
-  <Overview>Pollt X/Twitter-Accounts ueber eine selbst gehostete RSSHub-Instanz und loest bei neuen Tweets einen Pushover-Alarm aus (Emergency-Priority bis Bestaetigung oder N Einzelnachrichten).</Overview>
+  <Overview>RSSHub und tweetalarm in einem Container. Pollt X/Twitter-Accounts ueber das eingebaute RSSHub und loest bei neuen Tweets einen Pushover-Alarm aus (Emergency-Priority bis Bestaetigung oder N Einzelnachrichten).</Overview>
   <Category>Tools: Status:Stable</Category>
-  <WebUI/>
+  <WebUI>http://[IP]:[PORT:1200]/</WebUI>
   <Icon>https://pushover.net/images/pushover-logo.svg</Icon>
   <ExtraParams>--restart unless-stopped</ExtraParams>
   <Config Name="Accounts" Target="ACCOUNTS" Default="" Mode="" Description="X-Benutzernamen ohne @, kommagetrennt" Type="Variable" Display="always" Required="true" Mask="false"></Config>
-  <Config Name="RSSHub URL" Target="RSSHUB_URL" Default="http://192.168.1.10:1200" Mode="" Description="Basis-URL der RSSHub-Instanz (Unraid-IP:1200)" Type="Variable" Display="always" Required="true" Mask="false">http://192.168.1.10:1200</Config>
-  <Config Name="RSSHub Access Key" Target="RSSHUB_ACCESS_KEY" Default="" Mode="" Description="Nur wenn ACCESS_KEY in RSSHub gesetzt ist" Type="Variable" Display="always" Required="false" Mask="true"></Config>
+  <Config Name="Twitter auth_token" Target="TWITTER_AUTH_TOKEN" Default="" Mode="" Description="Wert des auth_token-Cookies aus einer eingeloggten x.com-Session (Zweitaccount)" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="RSSHub Port" Target="1200" Default="1200" Mode="tcp" Description="Nur zum Testen/Debuggen des Feeds noetig" Type="Port" Display="always" Required="false" Mask="false">1200</Config>
+  <Config Name="RSSHub Cache Expire (s)" Target="CACHE_EXPIRE" Default="60" Mode="" Description="Route-Cache von RSSHub (RSSHub-Default 300 s verzoegert Alarme)" Type="Variable" Display="always" Required="false" Mask="false">60</Config>
+  <Config Name="RSSHub Access Key" Target="ACCESS_KEY" Default="" Mode="" Description="Optional, schuetzt den RSSHub-Port. tweetalarm nutzt ihn automatisch" Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
   <Config Name="Pushover App Token" Target="PUSHOVER_TOKEN" Default="" Mode="" Description="API-Token der Pushover-Anwendung" Type="Variable" Display="always" Required="true" Mask="true"></Config>
   <Config Name="Pushover User Key" Target="PUSHOVER_USER" Default="" Mode="" Description="User- oder Group-Key" Type="Variable" Display="always" Required="true" Mask="true"></Config>
   <Config Name="Pushover Device" Target="PUSHOVER_DEVICE" Default="" Mode="" Description="Optional: nur an dieses Geraet (z. B. iphone)" Type="Variable" Display="always" Required="false" Mask="false"></Config>

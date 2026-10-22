@@ -27,8 +27,9 @@ def env_bool(name, default=False):
     return default if v == "" else v in ("1", "true", "yes", "on")
 
 
-RSSHUB_URL = env("RSSHUB_URL", "http://rsshub:1200").rstrip("/")
-RSSHUB_ACCESS_KEY = env("RSSHUB_ACCESS_KEY", "")
+RSSHUB_URL = env("RSSHUB_URL", "http://127.0.0.1:1200").rstrip("/")
+# Im Kombi-Container teilen sich RSSHub und tweetalarm ACCESS_KEY
+RSSHUB_ACCESS_KEY = env("RSSHUB_ACCESS_KEY", "") or env("ACCESS_KEY", "")
 ACCOUNTS = [a.strip().lstrip("@") for a in env("ACCOUNTS", "").split(",") if a.strip()]
 INCLUDE_RTS = env_bool("INCLUDE_RETWEETS", False)
 INCLUDE_REPLIES = env_bool("INCLUDE_REPLIES", False)
