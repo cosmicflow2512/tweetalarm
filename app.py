@@ -34,7 +34,7 @@ ACCOUNTS = [a.strip().lstrip("@") for a in env("ACCOUNTS", "").split(",") if a.s
 INCLUDE_RTS = env_bool("INCLUDE_RETWEETS", False)
 INCLUDE_REPLIES = env_bool("INCLUDE_REPLIES", False)
 POLL_INTERVAL = env("POLL_INTERVAL", 60, int)
-REQUEST_TIMEOUT = env("REQUEST_TIMEOUT", 30, int)
+REQUEST_TIMEOUT = env("TWEETALARM_TIMEOUT", 30, int)  # REQUEST_TIMEOUT gehoert RSSHub (ms)
 
 PO_TOKEN = env("PUSHOVER_TOKEN", "")
 PO_USER = env("PUSHOVER_USER", "")
