@@ -35,6 +35,7 @@ Beim ersten Lauf werden vorhandene Tweets nur als gesehen markiert, es gibt kein
 | `INCLUDE_RETWEETS` / `INCLUDE_REPLIES` | `false` | RSSHub-Parameter `includeRts` / `includeReplies` |
 | `FAIL_ALERT_THRESHOLD` / `FAIL_ALERT_REPEAT_MIN` | `5` / `60` | Störungsmeldung |
 | `TEST_ON_START` | `false` | Testalarm beim Start |
+| `TEST_TWEET_DELAY` | `0` | Simulierter Tweet X Sekunden nach Start über den normalen Alarmweg, 0 = aus |
 | `STATE_DIR` | `/data` | State-Datei |
 
 ## Hinweise

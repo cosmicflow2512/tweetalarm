@@ -50,6 +50,9 @@ BURST_COUNT = env("BURST_COUNT", 10, int)
 BURST_DELAY = env("BURST_DELAY", 2.0, float)
 BURST_PRIORITY = env("BURST_PRIORITY", 1, int)
 
+# Simulierter Tweet X Sekunden nach Start (0 = aus)
+TEST_TWEET_DELAY = env("TEST_TWEET_DELAY", 0, int)
+
 FAIL_THRESHOLD = env("FAIL_ALERT_THRESHOLD", 5, int)
 FAIL_REPEAT = env("FAIL_ALERT_REPEAT_MIN", 60, int) * 60
 STATE_FILE = Path(env("STATE_DIR", "/data")) / "state.json"
@@ -151,8 +154,8 @@ def pushover(title, message, url=None, priority=0, extra=None):
     return False
 
 
-def alert_tweet(account, entry):
-    title = f"@{account} hat getwittert"
+def alert_tweet(account, entry, test=False):
+    title = f"{'[TEST] ' if test else ''}@{account} hat getwittert"
     body = clean(entry.get("description") or entry.get("summary") or entry.get("title"))
     link = entry.get("link")
     if MODE == "burst":
@@ -163,6 +166,15 @@ def alert_tweet(account, entry):
     else:
         pushover(title, body, link, 2,
                  {"retry": RETRY, "expire": EXPIRE, "tags": f"tweetalarm,{account}"})
+
+
+def simulate_tweet():
+    account = ACCOUNTS[0]
+    log.info("Simulierter Tweet fuer @%s (TEST_TWEET_DELAY=%ss)", account, TEST_TWEET_DELAY)
+    alert_tweet(account, {
+        "description": "Simulierter Tweet von tweetalarm. Wenn du das liest, funktioniert die Alarmkette.",
+        "link": f"https://x.com/{account}",
+    }, test=True)
 
 
 def entry_id(e):
@@ -212,6 +224,7 @@ def main():
         pushover("tweetalarm Test", "Testalarm beim Start.", priority=2 if MODE != "burst" else 1,
                  extra={"retry": RETRY, "expire": 120} if MODE != "burst" else None)
     state = load_state()
+    test_due = time.monotonic() + TEST_TWEET_DELAY if TEST_TWEET_DELAY > 0 else None
     while running:
         for account in ACCOUNTS:
             if not running:
@@ -221,6 +234,9 @@ def main():
         for _ in range(POLL_INTERVAL):
             if not running:
                 break
+            if test_due is not None and time.monotonic() >= test_due:
+                test_due = None
+                simulate_tweet()
             time.sleep(1)
     log.info("Beendet")
 

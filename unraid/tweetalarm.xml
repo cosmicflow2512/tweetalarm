@@ -33,6 +33,7 @@
   <Config Name="Stoerungsalarm ab Fehlern" Target="FAIL_ALERT_THRESHOLD" Default="5" Mode="" Description="Nach so vielen Fehlabrufen in Folge kommt ein Pushover-Hinweis (Priority 1)" Type="Variable" Display="advanced" Required="false" Mask="false">5</Config>
   <Config Name="Stoerungsalarm Wiederholung (min)" Target="FAIL_ALERT_REPEAT_MIN" Default="60" Mode="" Description="Abstand wiederholter Stoerungsmeldungen" Type="Variable" Display="advanced" Required="false" Mask="false">60</Config>
   <Config Name="Testalarm beim Start" Target="TEST_ON_START" Default="false|true" Mode="" Description="Sendet beim Containerstart einen Testalarm" Type="Variable" Display="always" Required="false" Mask="false">true</Config>
+  <Config Name="Test-Tweet nach (s)" Target="TEST_TWEET_DELAY" Default="0" Mode="" Description="Simuliert X Sekunden nach Start einmalig einen Tweet ueber den normalen Alarmweg. 0 = aus" Type="Variable" Display="always" Required="false" Mask="false">0</Config>
   <Config Name="Log Level" Target="LOG_LEVEL" Default="INFO|DEBUG|WARNING" Mode="" Description="" Type="Variable" Display="advanced" Required="false" Mask="false">INFO</Config>
   <Config Name="Daten" Target="/data" Default="/mnt/user/appdata/tweetalarm" Mode="rw" Description="State (bereits gesehene Tweets)" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/tweetalarm</Config>
 </Container>
