@@ -53,6 +53,13 @@ BURST_PRIORITY = env("BURST_PRIORITY", 1, int)
 # Simulierter Tweet X Sekunden nach Start (0 = aus)
 TEST_TWEET_DELAY = env("TEST_TWEET_DELAY", 0, int)
 
+# Selbstheilung: nach SELFHEAL_AFTER 404-Fehlern in Folge RSSHub-Prozess neu starten
+# (leert den Cache, RSSHub holt frische GraphQL-Query-IDs). Max. SELFHEAL_MAX_PER_DAY pro 24 h.
+SELFHEAL_AFTER = env("SELFHEAL_AFTER", 3, int)
+SELFHEAL_MAX = env("SELFHEAL_MAX_PER_DAY", 3, int)
+RESTART_FLAG = Path(env("RESTART_FLAG", "/tmp/tweetalarm-restart-rsshub"))
+SELFHEAL_KEY = ".selfheal"  # kein gueltiger X-Benutzername
+
 FAIL_THRESHOLD = env("FAIL_ALERT_THRESHOLD", 5, int)
 FAIL_REPEAT = env("FAIL_ALERT_REPEAT_MIN", 60, int) * 60
 STATE_FILE = Path(env("STATE_DIR", "/data")) / "state.json"
@@ -190,6 +197,31 @@ def entry_id(e):
     return e.get("id") or e.get("guid") or e.get("link")
 
 
+def maybe_selfheal(account, acc, err, state):
+    if SELFHEAL_AFTER <= 0 or "Twitter API error: 404" not in str(err):
+        return
+    if acc["fails"] % SELFHEAL_AFTER != 0:
+        return
+    now = time.time()
+    history = [t for t in state.get(SELFHEAL_KEY, []) if now - t < 86400]
+    if len(history) >= SELFHEAL_MAX:
+        log.warning("Selbstheilung uebersprungen: Limit %d/24h erreicht", SELFHEAL_MAX)
+        state[SELFHEAL_KEY] = history
+        return
+    history.append(now)
+    state[SELFHEAL_KEY] = history
+    try:
+        RESTART_FLAG.touch()
+    except OSError as e:
+        log.error("Restart-Flag nicht schreibbar: %s", e)
+        return
+    log.warning("@%s: %d x 404 in Folge, starte RSSHub neu (%d/%d in 24h)",
+                account, acc["fails"], len(history), SELFHEAL_MAX)
+    pushover("tweetalarm: Selbstheilung",
+             f"@{account}: {acc['fails']} x Twitter-API-404. RSSHub wird neu gestartet "
+             f"({len(history)}/{SELFHEAL_MAX} in 24 h).", priority=0)
+
+
 def check(account, state):
     acc = state.setdefault(account, {"seen": [], "fails": 0, "last_fail_alert": 0})
     try:
@@ -197,6 +229,7 @@ def check(account, state):
     except Exception as e:
         acc["fails"] += 1
         log.warning("@%s: Abruf fehlgeschlagen (%d in Folge): %s", account, acc["fails"], e)
+        maybe_selfheal(account, acc, e, state)
         now = time.time()
         if acc["fails"] >= FAIL_THRESHOLD and now - acc["last_fail_alert"] > FAIL_REPEAT:
             pushover("tweetalarm: Feed gestoert",

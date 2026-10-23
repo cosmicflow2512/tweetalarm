@@ -7,6 +7,8 @@
 
 Fällt der Feed `FAIL_ALERT_THRESHOLD`-mal in Folge aus (z. B. abgelaufener auth_token), kommt eine Störungsmeldung, damit ein stiller Ausfall nicht unbemerkt bleibt.
 
+**Selbstheilung**: X rotiert gelegentlich die internen GraphQL-Query-IDs, RSSHub bekommt dann HTTP 404, bis sein ID-Cache abläuft. Nach `SELFHEAL_AFTER` solchen Fehlern in Folge startet tweetalarm den RSSHub-Prozess im Container neu (nicht den Container), RSSHub lädt die IDs frisch. Begrenzt auf `SELFHEAL_MAX_PER_DAY` pro 24 h.
+
 Beim ersten Lauf werden vorhandene Tweets nur als gesehen markiert, es gibt keinen Alarm.
 
 ## Setup
@@ -36,6 +38,7 @@ Beim ersten Lauf werden vorhandene Tweets nur als gesehen markiert, es gibt kein
 | `FAIL_ALERT_THRESHOLD` / `FAIL_ALERT_REPEAT_MIN` | `5` / `60` | Störungsmeldung |
 | `TEST_ON_START` | `false` | Testalarm beim Start |
 | `TEST_TWEET_DELAY` | `0` | Simulierter Tweet X Sekunden nach Start über den normalen Alarmweg, 0 = aus |
+| `SELFHEAL_AFTER` / `SELFHEAL_MAX_PER_DAY` | `3` / `3` | RSSHub-Neustart nach N × Twitter-API-404 in Folge, max. pro 24 h; 0 = aus |
 | `STATE_DIR` | `/data` | State-Datei |
 
 ## Hinweise
