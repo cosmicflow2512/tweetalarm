@@ -103,10 +103,19 @@ def feed_url(account):
     return url
 
 
+def rsshub_error(body):
+    """Fehlermeldung aus der RSSHub-Fehlerseite ziehen (lib/views/error.tsx:
+    <code class="... details ...">{message}</code>)."""
+    m = re.search(r'<code[^>]*\bdetails\b[^>]*>(.*?)</code>', body or "", re.S | re.I)
+    if m:
+        return clean(m.group(1))[:600]
+    return clean(re.sub(r"<(script|style)[^>]*>.*?</\1>", "", body or "", flags=re.S | re.I))[:300]
+
+
 def fetch(account):
     r = session.get(feed_url(account), timeout=REQUEST_TIMEOUT)
     if r.status_code != 200:
-        raise RuntimeError(f"HTTP {r.status_code}: {r.text[:200]!r}")
+        raise RuntimeError(f"HTTP {r.status_code}: {rsshub_error(r.text)}")
     feed = feedparser.parse(r.content)
     if feed.bozo and not feed.entries:
         raise RuntimeError(f"Feed nicht parsebar: {feed.bozo_exception}")
